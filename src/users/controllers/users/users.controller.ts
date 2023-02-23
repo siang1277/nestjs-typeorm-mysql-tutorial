@@ -7,6 +7,8 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { CreateUserDto } from 'src/users/dto/CreateUser.dto';
 import { CreateUserPostDto } from 'src/users/dto/CreateUserPost.dto';
@@ -30,6 +32,8 @@ export class UsersController {
   }
 
   @Post()
+  // register the validation for dto
+  @UsePipes(new ValidationPipe())
   createUser(@Body() createUserDto: CreateUserDto) {
     // const { confirmPassword, ...userDetails } = createUserDto;
     // if (confirmPassword != userDetails.password) {
