@@ -17,9 +17,16 @@ import { UsersService } from 'src/users/services/users/users.service';
 @Controller('users')
 export class UsersController {
   constructor(private userService: UsersService) {}
+
   @Get()
+  // getUsers(@Query('sortBy') sortBy: string) {
   getUsers() {
     return this.userService.findUsers();
+  }
+
+  @Get(':id')
+  getUserById(@Param('id', ParseIntPipe) id: number) {
+    return this.userService.findUserById(id);
   }
 
   @Post()

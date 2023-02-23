@@ -23,6 +23,13 @@ export class UsersService {
     return this.userRepository.find({ relations: ['profile', 'posts'] });
   }
 
+  findUserById(id: number) {
+    return this.userRepository.findOne({
+      where: { id },
+      relations: ['profile', 'posts'],
+    });
+  }
+
   createUser(userDetails: CreateUserParams) {
     const newUser = this.userRepository.create({
       username: userDetails.username,
