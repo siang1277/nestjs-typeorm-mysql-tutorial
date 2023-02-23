@@ -14,6 +14,7 @@ import { CreateUserDto } from 'src/users/dto/CreateUser.dto';
 import { CreateUserPostDto } from 'src/users/dto/CreateUserPost.dto';
 import { CreateUserProfileDto } from 'src/users/dto/CreateUserProfile.dto';
 import { UpdateUserDto } from 'src/users/dto/UpdateUser.dto';
+import { ValidateCreateProfilePipe } from 'src/users/pipes/validate-create-profile.pipe';
 import { UsersService } from 'src/users/services/users/users.service';
 
 @Controller('users')
@@ -60,9 +61,10 @@ export class UsersController {
   }
 
   @Post(':id/profiles')
+  @UsePipes(new ValidationPipe())
   createUserProfile(
     @Param('id', ParseIntPipe) id: number,
-    @Body() createUserProfileDto: CreateUserProfileDto,
+    @Body(ValidateCreateProfilePipe) createUserProfileDto: CreateUserProfileDto,
   ) {
     return this.userService.createUserProfile(id, createUserProfileDto);
   }
