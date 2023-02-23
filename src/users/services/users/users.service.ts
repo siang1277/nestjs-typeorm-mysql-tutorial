@@ -23,11 +23,15 @@ export class UsersService {
     return this.userRepository.find({ relations: ['profile', 'posts'] });
   }
 
-  findUserById(id: number) {
-    return this.userRepository.findOne({
+  async findUserById(id: number) {
+    const user = await this.userRepository.findOne({
       where: { id },
       relations: ['profile', 'posts'],
     });
+    if (!user) {
+      throw new HttpException('User not found.', HttpStatus.BAD_REQUEST);
+    }
+    return user;
   }
 
   createUser(userDetails: CreateUserParams) {
