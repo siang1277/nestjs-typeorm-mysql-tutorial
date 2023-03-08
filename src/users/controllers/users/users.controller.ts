@@ -7,6 +7,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
@@ -14,14 +15,17 @@ import { CreateUserDto } from 'src/users/dto/CreateUser.dto';
 import { CreateUserPostDto } from 'src/users/dto/CreateUserPost.dto';
 import { CreateUserProfileDto } from 'src/users/dto/CreateUserProfile.dto';
 import { UpdateUserDto } from 'src/users/dto/UpdateUser.dto';
+import { AuthGuard } from 'src/users/guards/auth.guard';
 import { ValidateCreateProfilePipe } from 'src/users/pipes/validate-create-profile.pipe';
 import { UsersService } from 'src/users/services/users/users.service';
 
 @Controller('users')
+// @UseGuards(AuthGuard)
 export class UsersController {
   constructor(private userService: UsersService) {}
 
   @Get()
+  @UseGuards(AuthGuard)
   // getUsers(@Query('sortBy') sortBy: string) {
   getUsers() {
     return this.userService.findUsers();
