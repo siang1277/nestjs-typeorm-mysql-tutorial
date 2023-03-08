@@ -58,6 +58,20 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
+## Command
+
+nest new nestjs-typeorm-mysql-tutorial
+mysql server install
+npm i @nestjs/typeorm typeorm mysql2
+
+mysql --host=localhost --user=root --password
+
+nest g module users
+nest g controller /users/controllers/users
+nest g service /users/services/users
+nest g middleware /users/middlewares/logger
+nest g guard /users/guards/Auth
+
 ## Support
 
 Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
