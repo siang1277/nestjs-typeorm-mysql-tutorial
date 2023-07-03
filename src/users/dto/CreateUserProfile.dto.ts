@@ -1,4 +1,6 @@
-import { IsNotEmpty } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsNotEmpty, ValidateNested } from 'class-validator';
+import { CreateAddressDto } from './CreateAddress.dto';
 
 export class CreateUserProfileDto {
   @IsNotEmpty()
@@ -13,4 +15,10 @@ export class CreateUserProfileDto {
   @IsNotEmpty()
   // @IsNumber()
   dob: string;
+
+  // @IsNotEmptyObject()
+  // added validate nested to implement the validaion inside CreateAddressDto
+  @ValidateNested()
+  @Type(() => CreateAddressDto)
+  address: CreateAddressDto;
 }
