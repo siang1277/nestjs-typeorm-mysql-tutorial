@@ -10,6 +10,7 @@ import {
   UpdateUserParams,
 } from 'src/utils/types';
 import { Repository } from 'typeorm';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
@@ -23,6 +24,16 @@ export class UsersService {
     return this.userRepository.find({ relations: ['profile', 'posts'] });
   }
 
+  async findOneByUsername(username: string) {
+    const user = await this.userRepository.findOne({
+      where: { username },
+    });
+    if (!user) {
+      throw new HttpException('User not found.', HttpStatus.BAD_REQUEST);
+    }
+    return user;
+  }
+
   async findUserById(id: number) {
     const user = await this.userRepository.findOne({
       where: { id },
@@ -34,10 +45,24 @@ export class UsersService {
     return user;
   }
 
-  createUser(userDetails: CreateUserParams) {
+  async createUser(userDetails: CreateUserParams) {
+    const user = await this.userRepository.findOneBy({
+      username: userDetails.username,
+    });
+    if (user) {
+      throw new HttpException(
+        'Username has been taken',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    const saltOrRounds = 10;
+    const hashedPassword = await bcrypt.hash(
+      userDetails.password,
+      saltOrRounds,
+    );
     const newUser = this.userRepository.create({
       username: userDetails.username,
-      password: userDetails.password,
+      password: hashedPassword,
       createdAt: new Date(),
     });
     return this.userRepository.save(newUser);

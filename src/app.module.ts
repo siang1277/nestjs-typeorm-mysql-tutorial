@@ -6,6 +6,9 @@ import { Post } from './typeorm/entities/Post';
 import { Profile } from './typeorm/entities/Profile';
 import { User } from './typeorm/entities/User';
 import { UsersModule } from './users/users.module';
+import { AuthService } from './auth/services/auth/auth.service';
+import { AuthModule } from './auth/auth.module';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -22,8 +25,9 @@ import { UsersModule } from './users/users.module';
       synchronize: true,
     }),
     UsersModule,
+    AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, AuthService, JwtService],
 })
 export class AppModule {}
