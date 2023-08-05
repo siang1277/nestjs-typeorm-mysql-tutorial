@@ -8,16 +8,18 @@ import { UsersService } from 'src/users/services/users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { SerializedUser } from 'src/users/type';
-import { MailerService } from '@nestjs-modules/mailer';
-import axios from 'axios';
+import * as SendGrid from '@sendgrid/mail';
 
 @Injectable()
 export class AuthService {
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
-    private readonly mailerService: MailerService,
-  ) {}
+  ) {
+    SendGrid.setApiKey(
+      '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',
+    );
+  }
 
   async validateUser(username: string, password: string): Promise<any> {
     const user = await this.usersService.findOneByUsername(username);
@@ -50,53 +52,17 @@ export class AuthService {
     return serializedUser;
   }
 
-  async sendWelcomeEmail(email: string, name: string): Promise<void> {
-    await this.mailerService.sendMail({
-      to: email,
-      // from: 'weisiangdrive1@gmail.com',
-      subject: 'Welcome to our app!',
-      text: `<p>Hello ${name},\n\nThank you for joining our app!\n\nBest regards,\nYour App Team</p>`,
-    });
+  async sendWelcomeEmail(email: string, name: string) {
+    const mail = {
+      to: 'weisiang91@gmail.com',
+      subject: 'Hello from sendgrid',
+      from: 'weisiang@agmostudio.com',
+      text: 'Hello',
+      html: '<h1>Hello</h1>',
+    };
+    const transport = await SendGrid.send(mail);
+    // avoid this on production. use log instead :)
+    console.log(`E-Mail sent to ${mail.to}`);
+    return transport;
   }
-
-  // async sendWelcomeEmail(email: string, name: string) {
-  //   const mailOptions = {
-  //     from: `SON <wesiang@agmostudio.com>`,
-  //     to: 'weisiang91@gmail.com',
-  //     subject: 'Welcome to our app!',
-  //     text: `<p>Hello ${name},\n\nThank you for joining our app!\n\nBest regards,\nYour App Team</p>`,
-  //   };
-  //   // if (mail.template) {
-  //   //   const emailTemplateSource = fs.readFileSync(
-  //   //     path.join(__dirname, `../../templates/${mail.template}.hbs`),
-  //   //     'utf8',
-  //   //   );
-  //   //   const template = handlebars.compile(emailTemplateSource);
-  //   //   const htmlToSend = template(mail.templateVariables);
-  //   //   mailOptions.html = htmlToSend;
-  //   // } else {
-  //   //   mailOptions.text = mail.text;
-  //   // }
-  //   try {
-  //     const body = Object.keys(mailOptions)
-  //       .map((key, index) => `${key}=${encodeURIComponent(mailOptions[key])}`)
-  //       .join('&');
-  //     const response = await axios.post(
-  //       `https://api.mailgun.net/v3/smtp.mailgun.org/messages`,
-  //       body,
-  //       {
-  //         auth: {
-  //           username: 'api',
-  //           password: '4e034d9e-c65e9a0b',
-  //         },
-  //         headers: {
-  //           'Content-Type': 'application/x-www-form-urlencoded',
-  //         },
-  //       },
-  //     );
-  //     return response;
-  //   } catch (error) {
-  //     throw error;
-  //   }
-  // }
 }
