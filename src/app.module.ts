@@ -9,6 +9,7 @@ import { UsersModule } from './users/users.module';
 import { AuthService } from './auth/services/auth/auth.service';
 import { AuthModule } from './auth/auth.module';
 import { JwtService } from '@nestjs/jwt';
+import { MailerModule } from '@nestjs-modules/mailer';
 
 @Module({
   imports: [
@@ -23,6 +24,19 @@ import { JwtService } from '@nestjs/jwt';
       entities: [User, Profile, Post],
       // auto update when entity has changed
       synchronize: true,
+    }),
+    MailerModule.forRoot({
+      transport: {
+        host: 'smtp.mailgun.org',
+        port: 587,
+        auth: {
+          user: `api`,
+          pass: '4e034d9e-c65e9a0b',
+        },
+      },
+      defaults: {
+        from: 'weisiang@agmostudio.com',
+      },
     }),
     UsersModule,
     AuthModule,
