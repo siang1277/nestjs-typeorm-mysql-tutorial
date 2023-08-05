@@ -35,4 +35,7 @@ export class User {
 
   @OneToMany(() => Post, (post) => post.user)
   posts: Post[];
+
+  @Column({ type: 'boolean', default: false })
+  verified: boolean;
 }

@@ -1,7 +1,8 @@
 import {
+  HttpException,
+  HttpStatus,
   Injectable,
   NotAcceptableException,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { UsersService } from 'src/users/services/users/users.service';
 import { JwtService } from '@nestjs/jwt';
@@ -35,7 +36,10 @@ export class AuthService {
     }
     const passwordValid = await bcrypt.compare(password, user.password);
     if (!passwordValid) {
-      throw new UnauthorizedException();
+      throw new HttpException(
+        'Incorrect username or password',
+        HttpStatus.BAD_REQUEST,
+      );
     }
     const payload = { username: user.username, password: user.password };
     const serializedUser = new SerializedUser(user);
