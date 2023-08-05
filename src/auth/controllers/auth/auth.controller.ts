@@ -56,10 +56,11 @@ export class AuthController {
   @UseInterceptors(ResponseInterceptor)
   @Get('test')
   async data() {
-    return await this.authService.sendWelcomeEmail(
-      'weisiang91@gmail.com',
-      'Alwin',
-    );
+    return await this.authService.sendMessage();
+    // return await this.authService.sendWelcomeEmail(
+    //   'weisiang91@gmail.com',
+    //   'Alwin',
+    // );
     return 'Data';
   }
 }

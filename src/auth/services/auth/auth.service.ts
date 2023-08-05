@@ -9,15 +9,22 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { SerializedUser } from 'src/users/type';
 import * as SendGrid from '@sendgrid/mail';
+import { Twilio } from 'twilio';
 
 @Injectable()
 export class AuthService {
+  private client: Twilio;
+
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
   ) {
     SendGrid.setApiKey(
       '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',
+    );
+    this.client = new Twilio(
+      'AC9ac11e6ec46f7ed222aca075cd5d5ec0',
+      '72d102528825e6fd25805d5dac7a7cfe',
     );
   }
 
@@ -64,5 +71,13 @@ export class AuthService {
     // avoid this on production. use log instead :)
     console.log(`E-Mail sent to ${mail.to}`);
     return transport;
+  }
+
+  async sendMessage(): Promise<void> {
+    await this.client.messages.create({
+      body: 'Hello World',
+      from: '+14707982198',
+      to: '+60162811714',
+    });
   }
 }
